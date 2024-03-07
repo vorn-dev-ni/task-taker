@@ -10,7 +10,12 @@ const routes_1 = require("./routes");
 const error_1 = require("./middleware/error");
 require("dotenv/config");
 const app = (0, express_1.default)();
-app.use(express_1.default.json());
+app.use(express_1.default.json(), (req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    next();
+});
 if ((_a = process.env.NODE_ENV) === null || _a === void 0 ? void 0 : _a.startsWith("development")) {
     app.use((0, morgan_1.default)('dev'));
 }

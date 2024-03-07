@@ -4,13 +4,19 @@ import { router as TodoRoute } from "./routes";
 import { notFoundMiddleware } from "./middleware/error";
 import "dotenv/config";
 const app: Express = express();
-app.use(express.json());
+app.use(express.json(),(req,res,next)=>{
+  res.header('Access-Control-Allow-Origin','*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  next()
+});
 if(process.env.NODE_ENV?.startsWith("development")) {
   app.use(morgan('dev'))
 }
 console.log(process.env.NODE_ENV)
 app.use("/resource", express.static(__dirname + "public/images/"));
 app.use("/api", TodoRoute);
+
 app.all("*", notFoundMiddleware);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
